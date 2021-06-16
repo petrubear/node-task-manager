@@ -11,7 +11,8 @@
   "description": "",
   "dependencies": {
     "mongodb": "^3.6.9",
-    "mongoose": "^5.12.14"
+    "mongoose": "^5.12.14",
+    "validator": "^13.6.0"
   },
   "devDependencies": {
     "eslint": "^7.28.0",
