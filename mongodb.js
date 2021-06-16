@@ -16,38 +16,20 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true, useUnifiedTopology: t
 
     const db = client.db(databaseName);
 
-    /*
-    const updatePromise = db.collection('users').updateOne({
-        _id: new ObjectID('60c8c102aa5c0e0824a48735'),
-    }, {
-        $set: {
-            name: 'Mike',
-        },
-        $inc: {
-            age: 1,
-        },
+    db.collection('users').deleteMany({
+        age: 39,
+    }).then((result) => {
+        console.log(result.deletedCount + ' rows afected');
+    }).catch((error) => {
+        console.log('Error: ', error);
     });
 
-    updatePromise.then((result) => {
-        // console.log(result.modifiedCount);
-        console.log(result);
+    db.collection('tasks').deleteOne({
+        description: 'calentar la moto',
+    }).then((result) => {
+        console.log(result.deletedCount + ' rows afected');
     }).catch((error) => {
-        console.log(error);
-    });
-     */
-
-    db.collection('tasks').updateMany(
-        {
-            completed: false,
-        }, {
-            $set: {
-                completed: true,
-            },
-        },
-    ).then((result) => {
-        console.log(result.modifiedCount + ' documents affected');
-    }).catch((error) => {
-        console.log('error: ', error);
+        console.log('Error: ', error);
     });
 });
 
