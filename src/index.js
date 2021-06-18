@@ -74,6 +74,18 @@ app.patch('/users/:id', async (req, res) => {
         res.status(400).send(e);
     }
 });
+app.delete('/users/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            res.status(404).send();
+        }
+        res.send(user);
+    } catch (e) {
+        res.status(500).send();
+    }
+});
 // endregion
 
 // region Tasks
@@ -138,6 +150,19 @@ app.patch('/tasks/:id', async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(500).send(e);
+    }
+});
+
+app.delete('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const task = await Task.findByIdAndDelete(id);
+        if (!task) {
+            res.status(404).send();
+        }
+        res.send(task);
+    } catch (e) {
+        res.status(500).send();
     }
 });
 // endregion
