@@ -44,6 +44,36 @@ app.get('/users/:id', async (req, res) => {
         res.status(500).send(e);
     }
 });
+
+app.patch('/users/:id', async (req, res) => {
+    const id = req.params.id;
+    const newUser = req.body;
+
+    const updates = Object.keys(newUser);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+    const isValidUpdate = updates.every((item) => {
+        return allowedUpdates.includes(item);
+    });
+
+    if (!isValidUpdate) {
+        return res.status(400).send({error: 'Invalid field updates'});
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(id, newUser, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!user) {
+            return res.status(404).send();
+        }
+        res.send(user);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+});
 // endregion
 
 // region Tasks
@@ -75,6 +105,38 @@ app.get('/tasks/:id', async (req, res) => {
         }
         res.send(task);
     } catch (e) {
+        res.status(500).send(e);
+    }
+});
+
+app.patch('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    const newTask = req.body;
+
+    const updates = Object.keys(newTask);
+    const allowedUpdates = ['completed', 'description'];
+
+    const isValidUpdate = updates.every((item) => {
+        return allowedUpdates.includes(item);
+    });
+
+    if (!isValidUpdate) {
+        return res.status(400).send({error: 'Invalid field updates'});
+    }
+
+    try {
+        const task = await Task.findByIdAndUpdate(id, newTask, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!task) {
+            return res.status(404).send();
+        }
+
+        res.send(task);
+    } catch (e) {
+        console.log(e);
         res.status(500).send(e);
     }
 });
