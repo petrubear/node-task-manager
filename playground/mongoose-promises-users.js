@@ -12,3 +12,17 @@ User.findByIdAndUpdate(userId, {age: 1}).then((user) => {
     console.log(e);
 });
 
+// using async await
+
+const updateAgeAndCount = async (id, age) => {
+    await User.findByIdAndUpdate(id, {age: age});
+    return await User.countDocuments({age: age});
+};
+
+updateAgeAndCount(userId, 5).then((result) => {
+    console.log(result);
+}).catch((e) => {
+    console.log(e);
+});
+
+
