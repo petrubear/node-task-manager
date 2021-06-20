@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -41,7 +42,22 @@ const userSchema = new mongoose.Schema({
             }
         },
     },
+    tokens: [{
+        token: {
+            type: String,
+            required: true,
+        },
+    }],
 });
+
+userSchema.methods.generateAuthToken = async function () {
+    const user = this;
+    const key = 'thisismynewcourse';
+    const token = jwt.sign({_id: user.id.toString()}, key);
+    user.tokens = user.tokens.concat({token: token});
+    await user.save();
+    return token;
+};
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email});
@@ -58,7 +74,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 };
 
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     // eslint-disable-next-line no-invalid-this
     const user = this;
 
