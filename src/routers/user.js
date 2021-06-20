@@ -57,10 +57,20 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
+        const user = await User.findById(id);
+        updates.forEach((update) => {
+            user[update] = newUser[update];
+        });
+
+        await user.save();
+
+        // esta forma no permite ejecutar el middelware save
+        /*
         const user = await User.findByIdAndUpdate(id, newUser, {
             new: true,
             runValidators: true,
         });
+         */
 
         if (!user) {
             return res.status(404).send();
