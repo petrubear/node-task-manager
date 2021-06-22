@@ -53,6 +53,68 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user);
 });
 
+router.patch('/users/me', auth, async (req, res) => {
+    const newUser = req.body;
+
+    const updates = Object.keys(newUser);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+    const isValidUpdate = updates.every((item) => {
+        return allowedUpdates.includes(item);
+    });
+
+    if (!isValidUpdate) {
+        return res.status(400).send({error: 'Invalid field updates'});
+    }
+
+    try {
+        const user = req.user;
+        updates.forEach((update) => {
+            user[update] = newUser[update];
+        });
+
+        await user.save();
+        res.send(user);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+});
+
+
+router.delete('/users/me', auth, async (req, res) => {
+    try {
+        /*
+        const id = req.user._id;
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            return res.status(404).send();
+        }
+         */
+        await req.user.remove();
+        res.send(req.user);
+    } catch (e) {
+        res.status(500).send();
+    }
+});
+// endregion
+// region old methods
+/*
+router.delete('/users/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            return res.status(404).send();
+        }
+        res.send(user);
+    } catch (e) {
+        res.status(500).send();
+    }
+});
+*/
+
+
+/*
 router.get('/users/:id', async (req, res) => {
     // console.log(req.params);
     const id = req.params.id;
@@ -66,7 +128,8 @@ router.get('/users/:id', async (req, res) => {
         res.status(500).send(e);
     }
 });
-
+*/
+/*
 router.patch('/users/:id', async (req, res) => {
     const id = req.params.id;
     const newUser = req.body;
@@ -91,34 +154,22 @@ router.patch('/users/:id', async (req, res) => {
         await user.save();
 
         // esta forma no permite ejecutar el middelware save
-        /*
-        const user = await User.findByIdAndUpdate(id, newUser, {
-            new: true,
-            runValidators: true,
-        });
-         */
 
-        if (!user) {
-            return res.status(404).send();
-        }
-        res.send(user);
-    } catch (e) {
-        res.status(400).send(e);
-    }
-});
+        //const user = await User.findByIdAndUpdate(id, newUser, {
+        //    new: true,
+        //    runValidators: true,
+        //});
 
-router.delete('/users/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        const user = await User.findByIdAndDelete(id);
-        if (!user) {
-            return res.status(404).send();
-        }
-        res.send(user);
-    } catch (e) {
-        res.status(500).send();
-    }
+
+if (!user) {
+    return res.status(404).send();
+}
+res.send(user);
+} catch (e) {
+    res.status(400).send(e);
+}
 });
+ */
 // endregion
 
 module.exports = router;
