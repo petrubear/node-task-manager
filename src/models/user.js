@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Task = require('./task');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -98,6 +99,16 @@ userSchema.pre('save', async function (next) {
         user.password = await bcrypt.hash(user.password, 8);
     }
 
+    next();
+});
+
+// delete tasks on remove user
+userSchema.pre('remove', async function (next) {
+    // eslint-disable-next-line no-invalid-this
+    const user = this;
+    await Task.deleteMany({
+        owner: user._id,
+    });
     next();
 });
 
