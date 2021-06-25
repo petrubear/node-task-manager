@@ -24,6 +24,17 @@ app.listen(port, () => {
 const multer = require('multer');
 const upload = multer({
     dest: 'images',
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, callback) {
+        // if (!file.originalname.endsWith('.pdf')) {
+        if (!file.originalname.match('\\.(doc|docx)$')) {
+            return callback(new Error('file must be doc|docx'));
+        }
+
+        callback(undefined, true);
+    },
 });
 
 app.post('/upload', upload.single('upload'), (req, res) => {
