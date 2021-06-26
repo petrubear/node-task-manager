@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js"
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "env-cmd": "^10.1.0",
     "eslint": "^7.28.0",
     "eslint-config-google": "^0.14.0",
+    "jest": "^27.0.5",
     "nodemon": "^2.0.7"
   }
 }
