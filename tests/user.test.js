@@ -40,7 +40,7 @@ test('Should signUp a new User', async () => {
     const user = await User.findById(response.body.user._id);
     expect(user).not.toBeNull();
 
-    // Assertios about response body
+    // Assertions about response body
     expect(response.body.user.name).toBe('edison');
     expect(response.body).toMatchObject({
         user: {
@@ -104,4 +104,37 @@ test('should not delete user profile', async () => {
         .delete('/users/me')
         .send()
         .expect(401);
+});
+
+test('should upload avatar', async () => {
+    await request(app)
+        .post('/users/me/avatar')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .attach('avatar', 'tests/fixtures/profile-pic.jpg')
+        .expect(200);
+
+    const user = await User.findById(userOneId);
+    expect(user.avatar).toStrictEqual(expect.any(Buffer));
+});
+
+test('should update user name', async () => {
+    const newName = 'Valeska';
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            name: newName,
+        }).expect(200);
+
+    const user = await User.findById(userOneId);
+    expect(user.name).toBe(newName);
+});
+
+test('should not update user location', async () => {
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            location: 'Calceta',
+        }).expect(400);
 });
