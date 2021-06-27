@@ -1,25 +1,12 @@
-require('./db/mongoose');
-
-const express = require('express');
-
-const userRouter = require('./routers/user');
-const taskRouter = require('./routers/task');
-
-const app = express();
+const app = require('./app');
 const port = process.env.PORT;
-
-
-// parsea automaticamente json a objetos
-app.use(express.json());
-app.use(userRouter);
-app.use(taskRouter);
-
 
 app.listen(port, () => {
     console.log('Listening on', port);
 });
 
 
+/*
 // multer
 const multer = require('multer');
 const upload = multer({
@@ -42,3 +29,4 @@ app.post('/upload', upload.single('upload'), (req, res) => {
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message});
 });
+ */

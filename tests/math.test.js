@@ -28,14 +28,14 @@ test.skip('async test demo', (done) => {
     }, 2000);
 });
 
-test('promise based async demo', (done) => {
+test.skip('promise based async demo', (done) => {
     add(2, 3).then((sum) => {
         expect(sum).toBe(5);
         done();
     });
 });
 
-test('async await based async demo', async () => {
+test.skip('async await based async demo', async () => {
     const sum = await add(2, 3);
     expect(sum).toBe(5);
 });

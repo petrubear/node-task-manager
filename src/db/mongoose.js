@@ -8,7 +8,7 @@ mongoose.connect(connectionURL, {
     useFindAndModify: false,
     useUnifiedTopology: true,
 }).then(() => {
-    console.log('mongoose connection OK');
+    // console.log('mongoose connection OK');
 }).catch((error) => {
     console.log(error);
 });
